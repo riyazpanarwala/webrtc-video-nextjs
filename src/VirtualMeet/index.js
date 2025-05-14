@@ -432,26 +432,13 @@ function VirtualMeet({
 
   const handleScreenShareStream = (stream) => {
     let videoTrack = stream.getVideoTracks()[0];
-
-    // Add content hint for better screen sharing quality
-    if (videoTrack) {
-      videoTrack.contentHint = "detail"; // 'detail' is better for screen sharing
-    }
-
     videoTrack.onended = () => {
       handleStopSharing();
     };
 
-    // Add a small delay before replacing streams
-    setTimeout(() => {
-      Object.keys(connections).forEach((item) => {
-        try {
-          replaceStreams(connections[item], stream);
-        } catch (error) {
-          console.error("Error replacing stream:", error);
-        }
-      });
-    }, 300);
+    Object.keys(connections).forEach((item) => {
+      replaceStreams(connections[item], stream);
+    });
 
     // setScreenStream(stream)
     // setSharingOpen(true)
