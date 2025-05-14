@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Avatar, Box, Drawer, Typography, styled } from "@mui/material";
 import { PersonOutlineOutlined } from "@mui/icons-material";
-import { SnackbarProvider, useSnackbar } from "notistack";
+import toast, { Toaster } from "react-hot-toast";
 
 import BottomMenu from "./BottomMenu/BottomMenu";
 import ChatBox from "./ChatBox/ChatBox";
@@ -84,7 +84,6 @@ function VirtualMeet({
   const [localWebcamOn, setlocalWebcamOn] = useState(!startWithVideoMuted);
   const [messages, setMessages] = useState([]);
   const socket = useSocket();
-  const { enqueueSnackbar } = useSnackbar();
 
   const peerConnectionConfig = {
     iceServers: [
@@ -94,6 +93,10 @@ function VirtualMeet({
       { urls: "stun:stun3.l.google.com:19302" },
       { urls: "stun:stun4.l.google.com:19302" },
     ],
+    iceTransportPolicy: "all", // Try both relay and non-relay candidates
+    bundlePolicy: "max-bundle", // Reduces negotiation
+    rtcpMuxPolicy: "require", // Reduces ports needed
+    iceCandidatePoolSize: 0, // 0 means let browser decide
   };
 
   //Small menus
@@ -212,13 +215,13 @@ function VirtualMeet({
   const handleUserLeft = (id, username) => {
     let streamsArr = remoteStreams.filter((v) => v.id !== id);
     setRemoteStreams(streamsArr);
-    enqueueSnackbar(`${username} left the meeting`);
+    toast.success(`${username} left the meeting`);
     setSelectedUser({ id: 1, name: "Me" });
   };
 
   const handleUserJoin = (id, clients, username) => {
     if (id !== socket.id) {
-      enqueueSnackbar(`${username} joined the meeting`);
+      toast.success(`${username} joined the meeting`);
     }
 
     if (clients.length > 1) {
@@ -356,24 +359,44 @@ function VirtualMeet({
   };
 
   const initStream = (stream) => {
-    if (startWithAudioMuted) {
-      toggleMediaStream("audio", startWithAudioMuted, stream);
-      setlocalMicOn(false);
-    }
+    try {
+      // Add this to stabilize the video track
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.contentHint = "motion"; // Helps with motion content
+        videoTrack.applyConstraints({
+          advanced: [{ frameRate: 24 }],
+        });
+      }
 
-    if (startWithVideoMuted) {
-      toggleMediaStream("video", startWithVideoMuted, stream);
-      setlocalWebcamOn(false);
+      if (startWithAudioMuted) {
+        toggleMediaStream("audio", startWithAudioMuted, stream);
+        setlocalMicOn(false);
+      }
+
+      if (startWithVideoMuted) {
+        toggleMediaStream("video", startWithVideoMuted, stream);
+        setlocalWebcamOn(false);
+      }
+    } catch (error) {
+      console.error("Error initializing stream:", error);
     }
   };
 
   useEffect(() => {
-    var constraints = {
+    const constraints = {
       video: {
-        width: { min: 320, ideal: 1280, max: 1920 },
-        height: { min: 180, ideal: 720, max: 1080 },
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        frameRate: { ideal: 24, max: 30 }, // Limit frame rate to reduce flicker
+        facingMode: "user",
+        resizeMode: "crop-and-scale", // Add this for better handling
       },
-      audio: true,
+      audio: {
+        autoGainControl: false, // Disable AGC to prevent brightness fluctuations
+        echoCancellation: true,
+        noiseSuppression: true,
+      },
     };
 
     if (navigator.mediaDevices.getUserMedia) {
@@ -817,9 +840,21 @@ function VirtualMeet({
 const App = (props) => {
   return (
     <SocketProvider>
-      <SnackbarProvider maxSnack={3} className={"videocall-alert"}>
-        <VirtualMeet {...props} />
-      </SnackbarProvider>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+            background: "#fff",
+            color: "#000",
+            boxShadow: "0 3px 10px rgba(0, 0, 0, 0.2)",
+          },
+          duration: 3000,
+          success: { style: { background: "#4caf50", color: "#fff" } },
+          error: { style: { background: "#f44336", color: "#fff" } },
+        }}
+      />
+      <VirtualMeet {...props} />
     </SocketProvider>
   );
 };

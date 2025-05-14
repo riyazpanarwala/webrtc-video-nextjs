@@ -103,12 +103,42 @@ function Menus(props) {
 
   return (
     <>
-      <Grid container sx={{ height: "100%" }}>
-        <Grid item lg={3} md={3} sm={0} xs={0}></Grid>
-        <Grid item lg={6} md={6} sm={12} xs={12} className="chatMenu-box">
+      <Grid
+        container
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(12, 1fr)",
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        {/* Left Spacer */}
+        <Grid
+          sx={{
+            gridColumn: {
+              xs: "span 0",
+              sm: "span 0",
+              md: "span 3",
+              lg: "span 3",
+            },
+          }}
+        ></Grid>
+
+        {/* Main Controls */}
+        <Grid
+          sx={{
+            gridColumn: {
+              xs: "span 12",
+              sm: "span 12",
+              md: "span 6",
+              lg: "span 6",
+            },
+          }}
+          className="chatMenu-box"
+        >
           <Box
             className="chatMenu-icon"
-            position={"relative"}
+            position="relative"
             sx={{
               bgcolor: micPermission
                 ? "#666666"
@@ -137,7 +167,7 @@ function Menus(props) {
             {isUpArrowIconsNeeded ? (
               <Box
                 className="upArrow-icon"
-                position={"absolute"}
+                position="absolute"
                 onClick={handleAudioSetting}
                 sx={{
                   display: { xs: "none", sm: "none", md: "flex", lg: "flex" },
@@ -147,12 +177,10 @@ function Menus(props) {
                   <KeyboardArrowUpOutlinedIcon sx={{ color: "gray" }} />
                 </ToolTip>
               </Box>
-            ) : (
-              ""
-            )}
+            ) : null}
             {audioSettingOpen ? (
               <ClickAwayListener onClickAway={handleAudioSetting}>
-                <Box className="micSetting" position={"absolute"}>
+                <Box className="micSetting" position="absolute">
                   <MicSettings
                     micList={micList}
                     speakerList={speakerList}
@@ -161,13 +189,12 @@ function Menus(props) {
                   />
                 </Box>
               </ClickAwayListener>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </Box>
+
           <Box
             className="chatMenu-icon"
-            position={"relative"}
+            position="relative"
             sx={{
               bgcolor: cameraOn
                 ? "#666666"
@@ -193,7 +220,7 @@ function Menus(props) {
             {isUpArrowIconsNeeded ? (
               <Box
                 className="upArrow-icon"
-                position={"absolute"}
+                position="absolute"
                 onClick={handleMiniCamera}
                 sx={{
                   display: { xs: "none", sm: "none", md: "flex", lg: "flex" },
@@ -203,30 +230,26 @@ function Menus(props) {
                   <KeyboardArrowUpOutlinedIcon sx={{ color: "gray" }} />
                 </ToolTip>
               </Box>
-            ) : (
-              ""
-            )}
-
+            ) : null}
             {cameraStream && miniCamera ? (
               <CameraSettings
                 cameraStream={cameraStream}
                 handleMiniCamera={handleMiniCamera}
               />
-            ) : (
-              <></>
-            )}
+            ) : null}
           </Box>
+
           {!sharingOpen ? (
             <Box
               className="chatMenu-icon"
               onClick={handleScreenShare}
               sx={{
                 display: {
+                  xs: "none !important",
+                  sm: "none !important",
+                  md: "flex !important",
                   lg: "flex !important",
                   xl: "flex !important",
-                  md: "flex !important",
-                  sm: "none !important",
-                  xs: "none !important",
                 },
                 bgcolor: "#666666",
               }}
@@ -241,11 +264,11 @@ function Menus(props) {
               onClick={handleStopSharing}
               sx={{
                 display: {
+                  xs: "none !important",
+                  sm: "none !important",
+                  md: "flex !important",
                   lg: "flex !important",
                   xl: "flex !important",
-                  md: "flex !important",
-                  sm: "none !important",
-                  xs: "none !important",
                 },
                 bgcolor: "#666666",
               }}
@@ -255,6 +278,7 @@ function Menus(props) {
               </ToolTip>
             </Box>
           )}
+
           <Box
             className="chatMenu-icon"
             onClick={handleDrawerClose}
@@ -266,17 +290,18 @@ function Menus(props) {
               <ChatOutlinedIcon className="IconList" />
             </ToolTip>
           </Box>
+
           <Box
             className="chatMenu-icon"
             onClick={handleShowUser}
             sx={{
               bgcolor: showUser ? "#3d3d3d !important" : "#666666",
               display: {
+                xs: "none !important",
+                sm: "none !important",
+                md: "flex !important",
                 lg: "flex !important",
                 xl: "flex !important",
-                md: "flex !important",
-                sm: "none !important",
-                xs: "none !important",
               },
             }}
           >
@@ -284,6 +309,7 @@ function Menus(props) {
               <GridViewOutlined className="IconList" />
             </ToolTip>
           </Box>
+
           {recordingEnabled ? (
             <Box
               className="chatMenu-icon"
@@ -291,11 +317,11 @@ function Menus(props) {
               sx={{
                 bgcolor: recording ? "#3d3d3d !important" : "#666666",
                 display: {
+                  xs: "none !important",
+                  sm: "none !important",
+                  md: "flex !important",
                   lg: "flex !important",
                   xl: "flex !important",
-                  md: "flex !important",
-                  sm: "none !important",
-                  xs: "none !important",
                 },
               }}
             >
@@ -305,56 +331,61 @@ function Menus(props) {
                 <RadioButtonCheckedIcon className="IconList" />
               </ToolTip>
             </Box>
-          ) : (
-            ""
-          )}
+          ) : null}
+
           <Box
             className="chatMenu-icon"
             onClick={handleSmallMenus}
             sx={{
-              // bgcolor: recording ? '#3d3d3d !important' : 'transparent',
               display: {
+                xs: "flex !important",
+                sm: "flex !important",
+                md: "none !important",
                 lg: "none !important",
                 xl: "none !important",
-                md: "none !important",
-                sm: "flex !important",
-                xs: "flex !important",
               },
               bgcolor: "#666666",
             }}
           >
             <MoreHorizSharpIcon className="IconList" />
           </Box>
+
           <Box
             className="chatMenu-icon"
             onClick={() => setCallEnd(true)}
             sx={{
               bgcolor: "#f44336 !important",
               display: {
+                xs: "flex !important",
+                sm: "flex !important",
+                md: "none !important",
                 lg: "none !important",
                 xl: "none !important",
-                md: "none !important",
-                sm: "flex !important",
-                xs: "flex !important",
               },
             }}
           >
-            <ToolTip title={"call End"}>
+            <ToolTip title="Call End">
               <CallEndOutlined className="IconList" />
             </ToolTip>
           </Box>
         </Grid>
+
+        {/* Right Buttons */}
         <Grid
-          item
-          lg={3}
-          md={3}
-          sm={0}
-          xs={0}
-          className="chatMenu-box"
           sx={{
+            display: "flex",
+            alignItems: "flex-end",
             justifyContent: "flex-end !important",
+            gap: 1,
             pr: 2,
+            gridColumn: {
+              xs: "span 0",
+              sm: "span 0",
+              md: "span 3",
+              lg: "span 3",
+            },
           }}
+          className="chatMenu-box"
         >
           {isVisitNotesEnabled ? (
             <Button
@@ -362,30 +393,28 @@ function Menus(props) {
               onClick={visitNotesClick}
               sx={{
                 display: {
+                  xs: "none !important",
+                  sm: "none !important",
+                  md: "flex !important",
                   lg: "flex !important",
                   xl: "flex !important",
-                  md: "flex !important ",
-                  sm: "none !important",
-                  xs: "none !important",
                 },
               }}
             >
               Visit Notes
             </Button>
-          ) : (
-            ""
-          )}
+          ) : null}
           <Button
             className="endCall-Btn"
             onClick={() => setCallEnd(true)}
             startIcon={<CallEndOutlined />}
             sx={{
               display: {
+                xs: "none !important",
+                sm: "none !important",
+                md: "flex !important",
                 lg: "flex !important",
                 xl: "flex !important",
-                md: "flex !important ",
-                sm: "none !important",
-                xs: "none !important",
               },
             }}
           >
