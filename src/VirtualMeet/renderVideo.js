@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo } from "react";
 
 const RenderVideo = ({ stream }) => {
   const renderVideo = useMemo(
@@ -6,18 +6,18 @@ const RenderVideo = ({ stream }) => {
       <video
         autoPlay
         controls={false}
-        style={{ width: '100%', height: '100%' }}
-        ref={cameraElement => {
+        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        ref={(cameraElement) => {
           if (cameraElement && stream) {
-            cameraElement.srcObject = stream
+            cameraElement.srcObject = stream;
           }
         }}
       />
     ),
     [stream]
-  )
+  );
 
-  return renderVideo
-}
+  return renderVideo;
+};
 
-export default RenderVideo
+export default RenderVideo;
