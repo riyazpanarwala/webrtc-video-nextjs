@@ -3,8 +3,9 @@ import { io } from "socket.io-client";
 
 const SocketContext = createContext(null);
 
-// const HOST_URL = `https://webrtc-mulipeer-native.onrender.com/`; // `https://webrtc-video.azurewebsites.net/`
-const HOST_URL = `https://marmalade-foregoing-brook.glitch.me/`;
+const HOST_URL = `https://webrtc-mulipeer-native.onrender.com/`;
+// `https://webrtc-video.azurewebsites.net/`
+// const HOST_URL = `https://marmalade-foregoing-brook.glitch.me/`;
 
 export const useSocket = () => {
   const socket = useContext(SocketContext);
