@@ -10,20 +10,20 @@
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^7.1.0",
-    "@mui/material": "^7.1.0",
-    "@vercel/analytics": "^1.5.0",
-    "nanoid": "^5.1.5",
-    "next": "15.3.2",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-hot-toast": "^2.5.2",
-    "sass": "^1.88.0",
-    "socket.io-client": "^4.8.1"
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.9",
+    "@mui/material": "^7.3.9",
+    "@vercel/analytics": "^2.0.1",
+    "nanoid": "^5.1.7",
+    "next": "16.2.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-hot-toast": "^2.6.0",
+    "sass": "^1.98.0",
+    "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
-    "eslint": "^8",
-    "eslint-config-next": "15.3.2"
+    "eslint": "^9",
+    "eslint-config-next": "16.2.1"
   }
 }
