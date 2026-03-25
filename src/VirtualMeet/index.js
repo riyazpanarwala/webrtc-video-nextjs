@@ -777,7 +777,7 @@ function VirtualMeet({
   } else if (showScreenShare) {
     content = (
       <Box className="screen-share">
-        <RenderVideo stream={screenStream} isLocalUser={isLocalUser} />
+        <RenderVideo stream={screenStream} isLocalUser />
       </Box>
     );
   } else {
