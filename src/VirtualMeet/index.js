@@ -719,8 +719,8 @@ function VirtualMeet({
     </Box>
   );
 
-  const VideoSection = ({ stream, visible }) => {
-    if (!visible || !stream) return null;
+  const VideoSection = ({ stream }) => {
+    if (!stream) return null;
 
     return (
       <Box className="camera-share">
@@ -751,7 +751,7 @@ function VirtualMeet({
 
     content = (
       <>
-        <VideoSection stream={stream} visible={videoVisible} />
+        <VideoSection stream={stream} />
         {!videoVisible && <UserAvatar user={selectedUser} />}
       </>
     );
