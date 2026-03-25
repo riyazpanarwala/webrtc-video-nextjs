@@ -369,6 +369,9 @@ function VirtualMeet({
         });
       }
 
+      const audioTrack = stream.getAudioTracks()[0];
+      if (audioTrack) audioTrack.contentHint = "speech";
+
       if (startWithAudioMuted) {
         toggleMediaStream("audio", startWithAudioMuted, stream);
         setlocalMicOn(false);
@@ -393,9 +396,10 @@ function VirtualMeet({
         resizeMode: "crop-and-scale", // Add this for better handling
       },
       audio: {
-        autoGainControl: false, // Disable AGC to prevent brightness fluctuations
         echoCancellation: true,
         noiseSuppression: true,
+        autoGainControl: true, // Switch to true for better stability
+        channelCount: 1,       // Mono is more stable for voice calls
       },
     };
 
@@ -682,6 +686,77 @@ function VirtualMeet({
     ];
   }
 
+  const UserAvatar = ({ user }) => (
+    <Box className="chat-content">
+      <Avatar
+        sx={{
+          width: 200,
+          height: 200,
+          bgcolor: user.name ? generateRandomColor(user.name) : "none",
+        }}
+      >
+        {user.name ? (
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: "100px",
+              color: "#fff",
+              fontWeight: 600,
+            }}
+          >
+            {user.name.charAt(0).toUpperCase()}
+          </Typography>
+        ) : (
+          <PersonOutlineOutlined sx={{ fontSize: "120px", color: "#fff" }} />
+        )}
+      </Avatar>
+
+      <Box className="user-details">
+        <Typography variant="h6" sx={{ fontSize: "16px" }}>
+          {user.name || "Name (N/A)"}
+        </Typography>
+      </Box>
+    </Box>
+  );
+
+  const VideoSection = ({ stream }) => {
+    if (!stream) return null;
+
+    return (
+      <Box className="camera-share">
+        <RenderVideo stream={stream} />
+      </Box>
+    );
+  };
+
+  const isLocalUser = selectedUser.id === 1;
+  // const isRemoteMuted = !isLocalUser && !isSelectedStreamVideoMuted();
+  const showScreenShare = screenStream && sharingOpen;
+
+  let content;
+
+  if (showUser) {
+    content = null;
+  } else if (showScreenShare) {
+    content = (
+      <Box className="screen-share">
+        <RenderVideo stream={screenStream} />
+      </Box>
+    );
+  } else {
+    const stream = isLocalUser ? localStream : selectedUser.stream;
+    const videoVisible = isLocalUser
+      ? localWebcamOn
+      : isSelectedStreamVideoMuted();
+
+    content = (
+      <>
+        <VideoSection stream={stream} />
+        {!videoVisible && <UserAvatar user={selectedUser} />}
+      </>
+    );
+  }
+
   return (
     <Box
       sx={{ display: { xs: "block", sm: "block", md: "block", lg: "flex" } }}
@@ -726,56 +801,7 @@ function VirtualMeet({
               <p>{roomName}</p>
               <Clock />
             </Box>
-            {showUser ? (
-              ""
-            ) : screenStream && sharingOpen ? (
-              <Box className="screen-share">
-                <RenderVideo stream={screenStream} />
-              </Box>
-            ) : selectedUser.id === 1 && localStream && localWebcamOn ? (
-              <Box className="camera-share">
-                <RenderVideo stream={localStream} />
-              </Box>
-            ) : selectedUser.id !== 1 && isSelectedStreamVideoMuted() ? (
-              <Box className="camera-share">
-                <RenderVideo stream={selectedUser.stream} />
-              </Box>
-            ) : (
-              <Box className="chat-content">
-                <Box />
-                <Avatar
-                  sx={{
-                    width: 200,
-                    height: 200,
-                    bgcolor: selectedUser.name
-                      ? generateRandomColor(selectedUser.name)
-                      : "none",
-                  }}
-                >
-                  {selectedUser.name ? (
-                    <Typography
-                      variant="h1"
-                      sx={{
-                        fontSize: "100px",
-                        color: "#fff",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {selectedUser.name.charAt(0).toUpperCase()}
-                    </Typography>
-                  ) : (
-                    <PersonOutlineOutlined
-                      sx={{ fontSize: "120px", color: "#fff" }}
-                    />
-                  )}
-                </Avatar>
-                <Box className="user-details">
-                  <Typography variant="h6" sx={{ fontSize: "16px" }}>
-                    {selectedUser.name ? selectedUser.name : "Name (N/A)"}
-                  </Typography>
-                </Box>
-              </Box>
-            )}
+            {content}
             <SideMenu
               open={open}
               chat={chat}
@@ -832,8 +858,8 @@ function VirtualMeet({
             />
           </Box>
         </Box>
-      </Main>
-    </Box>
+      </Main >
+    </Box >
   );
 }
 
