@@ -688,6 +688,7 @@ function VirtualMeet({
 
   const UserAvatar = ({ user }) => (
     <Box className="chat-content">
+      <Box />
       <Avatar
         sx={{
           width: 200,
@@ -719,11 +720,11 @@ function VirtualMeet({
     </Box>
   );
 
-  const VideoSection = ({ stream }) => {
+  const VideoSection = ({ stream, visible }) => {
     if (!stream) return null;
 
     return (
-      <Box className="camera-share">
+      <Box className="camera-share" sx={{ display: visible ? "block" : "none" }}>
         <RenderVideo stream={stream} />
       </Box>
     );
@@ -751,7 +752,7 @@ function VirtualMeet({
 
     content = (
       <>
-        <VideoSection stream={stream} />
+        <VideoSection stream={stream} visible={videoVisible} />
         {!videoVisible && <UserAvatar user={selectedUser} />}
       </>
     );
