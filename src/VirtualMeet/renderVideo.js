@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-const RenderVideo = ({ stream }) => {
+const RenderVideo = ({ stream, isLocalUser }) => {
   const renderVideo = useMemo(
     () => (
       <video
@@ -12,9 +12,10 @@ const RenderVideo = ({ stream }) => {
             cameraElement.srcObject = stream;
           }
         }}
+        muted={isLocalUser} // Mute the local user's video to prevent echo
       />
     ),
-    [stream]
+    [stream, isLocalUser]
   );
 
   return renderVideo;

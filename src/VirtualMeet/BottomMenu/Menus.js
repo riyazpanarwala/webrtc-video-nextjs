@@ -22,7 +22,7 @@ import MicSettings from "../Settings/MicSettings";
 import CameraSettings from "../Settings/CameraSettings";
 import SmallMenus from "./SmallMenus";
 
-const isUpArrowIconsNeeded = false;
+const isUpArrowIconsNeeded = true; // Set this to true to display the up arrow icons for audio and camera settings
 
 function Menus(props) {
   const {
@@ -143,11 +143,11 @@ function Menus(props) {
               bgcolor: micPermission
                 ? "#666666"
                 : {
-                    xs: "#4a4a4a",
-                    sm: "#666666",
-                    md: "#666666",
-                    lg: "#666666",
-                  },
+                  xs: "#4a4a4a",
+                  sm: "#666666",
+                  md: "#666666",
+                  lg: "#666666",
+                },
             }}
           >
             <Box className="chat-micIcon" onClick={handleMic}>
@@ -199,11 +199,11 @@ function Menus(props) {
               bgcolor: cameraOn
                 ? "#666666"
                 : {
-                    xs: "#4a4a4a",
-                    sm: "#666666",
-                    md: "#666666",
-                    lg: "#666666",
-                  },
+                  xs: "#4a4a4a",
+                  sm: "#666666",
+                  md: "#666666",
+                  lg: "#666666",
+                },
             }}
           >
             <Box className="chat-cameraIcon" onClick={handleCamera}>

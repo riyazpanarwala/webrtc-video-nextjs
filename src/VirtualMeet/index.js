@@ -323,6 +323,40 @@ function VirtualMeet({
     setlocalWebcamOn((prev) => !prev);
   };
 
+  /*
+  const toggleMic = () => {
+    if (!localStream) return;
+
+    const track = localStream.getAudioTracks()[0];
+
+    if (!track) return;
+
+    track.enabled = !track.enabled;
+
+    setlocalMicOn(track.enabled);
+
+    socket.emit("message", {
+      isMuted: !track.enabled,
+    });
+  };
+
+  const toggleCamera = () => {
+    if (!localStream) return;
+
+    const track = localStream.getVideoTracks()[0];
+
+    if (!track) return;
+
+    track.enabled = !track.enabled;
+
+    setlocalWebcamOn(track.enabled);
+
+    socket.emit("message", {
+      isVideoMuted: !track.enabled,
+    });
+  };
+  */
+
   const endCall = () => {
     socket.disconnect();
     connections = [];
@@ -398,8 +432,10 @@ function VirtualMeet({
       audio: {
         echoCancellation: true,
         noiseSuppression: true,
-        autoGainControl: true, // Switch to true for better stability
-        channelCount: 1,       // Mono is more stable for voice calls
+        autoGainControl: true,
+        channelCount: 1,
+        latency: 0,
+        sampleRate: 48000,
       },
     };
 
@@ -720,19 +756,19 @@ function VirtualMeet({
     </Box>
   );
 
+  const isLocalUser = selectedUser.id === 1;
+  // const isRemoteMuted = !isLocalUser && !isSelectedStreamVideoMuted();
+  const showScreenShare = screenStream && sharingOpen;
+
   const VideoSection = ({ stream, visible }) => {
     if (!stream) return null;
 
     return (
       <Box className="camera-share" sx={{ display: visible ? "block" : "none" }}>
-        <RenderVideo stream={stream} />
+        <RenderVideo stream={stream} isLocalUser={isLocalUser} />
       </Box>
     );
   };
-
-  const isLocalUser = selectedUser.id === 1;
-  // const isRemoteMuted = !isLocalUser && !isSelectedStreamVideoMuted();
-  const showScreenShare = screenStream && sharingOpen;
 
   let content;
 
@@ -741,7 +777,7 @@ function VirtualMeet({
   } else if (showScreenShare) {
     content = (
       <Box className="screen-share">
-        <RenderVideo stream={screenStream} />
+        <RenderVideo stream={screenStream} isLocalUser />
       </Box>
     );
   } else {
