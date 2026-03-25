@@ -311,51 +311,42 @@ function VirtualMeet({
     });
   };
 
-  const toggleMic = () => {
+  /*
+  const toggleMic1 = () => {
     socket.emit("message", { isMuted: localMicOn });
     toggleMediaStream("audio", localMicOn, localStream);
     setlocalMicOn((prev) => !prev);
   };
 
-  const toggleCamera = () => {
+  const toggleCamera1 = () => {
     socket.emit("message", { isVideoMuted: localWebcamOn });
     toggleMediaStream("video", localWebcamOn, localStream);
     setlocalWebcamOn((prev) => !prev);
   };
+  */
 
-  /*
+  // ✅ FIX these two functions - the bug is in the toggleMic and toggleCamera logic
   const toggleMic = () => {
     if (!localStream) return;
+    const audioTrack = localStream.getAudioTracks()[0];
+    if (!audioTrack) return;
 
-    const track = localStream.getAudioTracks()[0];
-
-    if (!track) return;
-
-    track.enabled = !track.enabled;
-
-    setlocalMicOn(track.enabled);
-
-    socket.emit("message", {
-      isMuted: !track.enabled,
-    });
+    audioTrack.enabled = !audioTrack.enabled;
+    setlocalMicOn(audioTrack.enabled);
+    socket.emit("message", { isMuted: !audioTrack.enabled });
   };
 
   const toggleCamera = () => {
     if (!localStream) return;
+    const videoTrack = localStream.getVideoTracks()[0];
+    if (!videoTrack) return;
 
-    const track = localStream.getVideoTracks()[0];
+    console.log(videoTrack, videoTrack.enabled);
 
-    if (!track) return;
-
-    track.enabled = !track.enabled;
-
-    setlocalWebcamOn(track.enabled);
-
-    socket.emit("message", {
-      isVideoMuted: !track.enabled,
-    });
+    videoTrack.enabled = !videoTrack.enabled;
+    setlocalWebcamOn(videoTrack.enabled);
+    socket.emit("message", { isVideoMuted: !videoTrack.enabled });
   };
-  */
 
   const endCall = () => {
     socket.disconnect();

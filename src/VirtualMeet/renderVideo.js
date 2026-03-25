@@ -12,10 +12,10 @@ const RenderVideo = ({ stream, isLocalUser }) => {
             cameraElement.srcObject = stream;
           }
         }}
-        muted={isLocalUser} // Mute the local user's video to prevent echo
+      // muted={isLocalUser} // Mute the local user's video to prevent echo
       />
     ),
-    [stream, isLocalUser]
+    [stream]
   );
 
   return renderVideo;
