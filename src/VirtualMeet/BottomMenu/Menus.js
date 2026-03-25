@@ -22,7 +22,7 @@ import MicSettings from "../Settings/MicSettings";
 import CameraSettings from "../Settings/CameraSettings";
 import SmallMenus from "./SmallMenus";
 
-const isUpArrowIconsNeeded = true; // Set this to true to display the up arrow icons for audio and camera settings
+const isUpArrowIconsNeeded = false; // Set this to true to display the up arrow icons for audio and camera settings
 
 function Menus(props) {
   const {
